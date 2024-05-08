@@ -106,7 +106,7 @@ Se debe poder construir un objeto `Card` desde una cadena de texto. **Ejemplos**
 
 ## Módulo helpers
 
-El fichero [helpers.py](./helpers.py) contiene funciones de apoyo al desarrollo del proyecto.
+El fichero [helpers.py](/Archivos_Poker/helpers.py) contiene funciones de apoyo al desarrollo del proyecto.
 
 La más importante es: `combinations(values, n)` que genera todas las combinaciones posibles de `values` con tamaño `n`:
 
