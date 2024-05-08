@@ -131,7 +131,7 @@ Dos apuntes importantes:
 
 ## Comprobación
 
-- Puedes descargar aquí el [fichero de tests](test_poker.py) para pytest.
+- Puedes descargar aquí el [fichero de tests](/Archivos_Poker/test_poker.py) para pytest.
 - La calificación de la tarea estará en función del número de tests superados y de la calidad del código escrito.
 
 ## Referencias
