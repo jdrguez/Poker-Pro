@@ -1,6 +1,6 @@
 # Poker-Pro
-Proyecto asignatura de programación sobre la creación de un poker
 
+Proyecto asignatura de programación sobre la creación de un poker
 
 # UT4-TE2: Objetos y clases
 
