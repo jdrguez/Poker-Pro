@@ -31,9 +31,6 @@ class Player:
         self.name = name
         self.private_cards = []
         self.common_cards = []
-
-    def better_combinations(self, cards: list) -> list:
-        return helpers.combinations(cards)
     
     def recieve_cards(self, cards):
         self.private_cards = cards
