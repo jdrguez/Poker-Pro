@@ -1,20 +1,45 @@
-from helpers import shuffle, combinations
-
+from __future__ import annotations
+from helpers import shuffle, combinations, random
 
 
 class Card:
+    VALUES = {'J': 10, 'Q': 11, 'K': 12, 'A': 13}
     def __init__(self, card:str):
-        self.card = card
-        self.value = card[0]
-        self.suit = card[1]
+        self.suit = card[-1]
+        self.num = card[0:-1]
+        self.value = self.VALUES[self.num] if self.num in self.VALUES else int(self.num)
     pass
 
+    def __gt__(self, other: Card) -> bool:
+        return self.value > other.value
+    
+    def __eq__(self, other: Card) -> bool:
+        return self.value == other.value
+    
+    def __str__(self) -> str:
+        return f'{self.value}{self.suit}'
+    
+    
     def __repr__(self) -> str:
         return f"{self.value}{self.suit}"
 
 
 class Deck:
-    pass
+    SUITS = ['♠', '♣', '◆', '❤']
+    LETTERS = ['J', 'Q', 'K', 'A']
+    def init(self):
+        self.deck = []
+        self.generate()
+
+    def generate(self):
+        for suit in self.SUITS:
+            for num in range(2, 11):
+                self.deck.append(Card(str(num) + suit))
+            for n in range(4):
+                self.deck.append(Card(self.LETTERS[n] + suit))
+        
+        random.shuffle(self.deck)
+
 
 
 class Hand:
@@ -28,57 +53,108 @@ class Hand:
     FOUR_OF_A_KIND = 7
     STRAIGHT_FLUSH = 8
 
-    def __init__(self, cards: list):
+    def __init__(self, cards: list[Card]):
         self.cards = cards
-        self.cat = None
-        self.cat_rank = None
-        self.evaluate_hand()
+        self.cards = self.sort_by_value_and_frequency()
+        self.cat, self.cat_rank = self.classify()
     
-    def evaluate_hand(self):
-        pass
+    def __repr__(self):
+        return f'Hand({self.cards})'
     
     def __contains__(self, card):
         return card in self.cards
     
-    ## No se si es la mejor manera o será con atributos
-    @classmethod
-    def get_high_card() -> str:
-        pass
+    def __gt__(self, other: Hand):
+        return self.cat > other.cat
     
-    @classmethod
-    def get_one_pair() -> str:
-        pass
+    def __getitem__(self, index: int):
+        return self.cards[index]
     
-    @classmethod
-    def get_two_pair() -> str:
-        pass
-    
-    @classmethod
-    def get_three_of_a_kind() -> str:
-        pass
-    
-    @classmethod
-    def get_straight() -> str:
-        pass
-    
-    @classmethod
-    def get_flush() -> str:
-        pass
+    def __iter__(self):
+        for card in self.cards:
+            yield card
 
-    @classmethod
-    def get_full_house() -> str:
-        pass
-    
-    @classmethod
-    def get_four_of_a_kind() -> str:
-        pass
-    
-    @classmethod
-    def get_straight_flush() -> str:
-        pass
+    def classify(self):
+        
+        if self.is_straight_flush:
+            return Hand.STRAIGHT_FLUSH, self.get_high_card
+        elif self.is_four_of_a_kind:
+            return Hand.FOUR_OF_A_KIND, self.get_high_card
+        elif self.is_full_house:
+            return Hand.FULL_HOUSE, (self.get_high_card, self[3])
+        elif self.is_flush:
+            return Hand.FLUSH, self.get_high_card
+        elif self.is_straight:
+            return Hand.STRAIGHT, self.get_high_card
+        elif self.is_three_of_a_kind:
+            return Hand.THREE_OF_A_KIND, self.get_high_card
+        elif self.is_two_pair:
+            return Hand.TWO_PAIR, (self.get_high_card, self[2])
+        elif self.is_one_pair:
+            return Hand.ONE_PAIR, self.get_high_card
+        
+        return Hand.HIGH_CARD, self.get_high_card
 
 
+    @property
+    def get_high_card(self) -> bool:
+        return self[0]
+    
+    @property
+    def is_four_of_a_kind(self):
+        return self[0] in (self[1], self[2], self[3])
 
-    def __contains__(self) -> bool:
-        return self in self.cards
-    pass
+    @property
+    def is_flush(self):
+        def validator(counter: int) -> bool:
+            suits = [card.suits for card in self]
+            for suit in suits:
+                if suits.count(suit) == counter:
+                    return True
+            return False
+        return validator(5)
+    
+    @property
+    def is_one_pair(self) -> bool:
+        return self[0] == self[1]
+    
+    def sort_by_value_and_frequency(cards):
+        value_counts = {}
+        for card in cards:
+            if card.value in value_counts:
+                value_counts[card.value] += 1
+            else:
+                value_counts[card.value] = 1
+
+        return sorted(cards, key=lambda card: (value_counts[card.value], card.value), reverse=True)
+
+
+    @property    
+    def is_two_pair(self) -> bool:
+        return self[0] == self[1] and self[2] == self[3]
+                
+    @property
+    def is_three_of_a_kind(self) -> bool:
+        return self[0] in (self[1], self[2])
+
+    @property
+    def is_straight(self) -> bool:
+        values = [int(card.value) for card in self]
+        buffer = values[0]
+        for value in values[1:]:
+            if buffer - 1 != value:
+                return False
+            buffer = value
+        return True
+
+    @property
+    def is_full_house(self) -> bool:
+        return self[0] in (self[1], self[2]) and self[3] == self[4]
+            
+    @property
+    def is_straight_flush(self) -> bool:
+        return self.is_straight() and self.is_flush()
+
+
+
+    
