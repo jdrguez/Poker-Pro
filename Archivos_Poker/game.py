@@ -24,7 +24,7 @@ def get_winner(players, community_cards, private_cards):
 
     winner = max(best_hands)
 
-    return player_2, winner
+    return player_1, winner
     
 
 

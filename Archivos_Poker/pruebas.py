@@ -21,11 +21,11 @@ class Card:
         return self.value == other.value
     
     def __str__(self) -> str:
-        return f'{self.value}{self.suit}'
+        return f'{self.num}{self.suit}'
     
     
     def __repr__(self) -> str:
-        return f"{self.value}{self.suit}"
+        return f"{self.num}{self.suit}"
 
 
 class Deck:
@@ -224,8 +224,14 @@ class Player:
             hand = Hand(list(combo))
             if not best_hand or hand > best_hand:
                 best_hand = hand
-        return best_hand
+            elif best_hand == hand:
+                for winner, cmmon in zip(best_hand, hand):
+                    if winner < cmmon:
+                        best_hand = hand
         
+
+        
+            
         return best_hand
 
 
@@ -245,18 +251,18 @@ if __name__ == '__main__':
     player2 = Player('player2')
     print(player2)
 
-    common = [Card('A❤'), Card('K◆'), Card('Q♣'), Card('9❤'), Card('3♣')]
+    common = [Card('10◆'), Card('9◆'), Card('8♠'), Card('6❤'), Card('5♠')]
 
     player1.recieve_cmoon_cards(common)
     player2.recieve_cmoon_cards(common)
 
-    player1.recieve_priv_cards([Card('6◆'), Card('3◆')])
-    player2.recieve_priv_cards([Card('J◆'), Card('4◆')])
+    player1.recieve_priv_cards([Card('Q♠'), Card('4◆')])
+    player2.recieve_priv_cards([Card('8♣'), Card('3❤')])
 
     print(f'Player2 {player2.private_cards}')
     print(player1.best_hand())
     
-    print(get_winner(player1.best_hand(), player2.best_hand()))
+    print(f'Ganador: {get_winner(player1.best_hand(), player2.best_hand())}')
     
     
     

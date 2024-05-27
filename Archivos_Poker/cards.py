@@ -17,11 +17,11 @@ class Card:
         return self.value == other.value
     
     def __str__(self) -> str:
-        return f'{self.value}{self.suit}'
+        return f'{self.num}{self.suit}'
     
     
     def __repr__(self) -> str:
-        return f"{self.value}{self.suit}"
+        return f"{self.num}{self.suit}"
 
 
 class Deck:
@@ -65,6 +65,9 @@ class Hand:
         return card in self.cards
     
     def __gt__(self, other: Hand):
+        return self.cat > other.cat
+    
+    def __eq__(self, other: Hand):
         return self.cat > other.cat
     
     def __getitem__(self, index: int):

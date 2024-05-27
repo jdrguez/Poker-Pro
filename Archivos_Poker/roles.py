@@ -67,6 +67,14 @@ class Player:
             hand = Hand(list(combo))
             if not best_hand or hand > best_hand:
                 best_hand = hand
+            elif best_hand == hand:
+                for winner, cmmon in zip(best_hand, hand):
+                    if winner < cmmon:
+                        best_hand = hand
+        
+
+        
+            
         return best_hand
 
 
