@@ -3,18 +3,30 @@ from roles import Player
 from cards import Card, Hand
 
 
+class Game:
+    def __init__(self, players):
+        self.player = players
+        self.dealer = Dealer()
+        self.deck = Deck()
+
+
 
 def get_winner(players, community_cards, private_cards):
     best_hands = []
-    for player, priv_cards in zip(players, private_cards):
-        hand = player.best_hand(community_cards + priv_cards)
-        best_hands.append((player, hand))
+    player_1, player_2 = players
 
-    best_hands.sort(key=lambda x: x[1], reverse=True)
-    winning_hand = best_hands[0][1]
+    player_1.recieve_priv_cards(private_cards[0])
+    player_1.recieve_cmoon_cards(community_cards)
+    player_2.recieve_priv_cards(private_cards[1])
+    player_2.recieve_cmoon_cards(community_cards)
+    best_hands.append(player_1.best_hand())
+    best_hands.append(player_2.best_hand())
 
-    winners = [player for player, hand in best_hands if hand == winning_hand]
+    winner = max(best_hands)
 
-    if len(winners) > 1:
-        return None, winning_hand  
-    return winners[0], winning_hand
+    return player_2, winner
+    
+
+
+
+

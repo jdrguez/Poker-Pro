@@ -57,6 +57,8 @@ class Player:
     def recieve_cmoon_cards(self, cards: list[Card]):
         self.common_cards = cards
         
+    def __str__(self):
+        return name
     
     def best_hand(self):
         all_cards = self.private_cards + self.common_cards

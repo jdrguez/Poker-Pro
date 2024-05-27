@@ -76,49 +76,45 @@ class Hand:
 
     def classify(self):
         
-        if self.is_straight_flush:
-            return Hand.STRAIGHT_FLUSH, self.get_high_card
-        elif self.is_four_of_a_kind:
-            return Hand.FOUR_OF_A_KIND, self.get_high_card
-        elif self.is_full_house:
-            return Hand.FULL_HOUSE, (self.get_high_card, self[3])
-        elif self.is_flush:
-            return Hand.FLUSH, self.get_high_card
-        elif self.is_straight:
-            return Hand.STRAIGHT, self.get_high_card
-        elif self.is_three_of_a_kind:
-            return Hand.THREE_OF_A_KIND, self.get_high_card
-        elif self.is_two_pair:
-            return Hand.TWO_PAIR, (self.get_high_card, self[2])
-        elif self.is_one_pair:
-            return Hand.ONE_PAIR, self.get_high_card
+        if self.is_straight_flush():
+            return Hand.STRAIGHT_FLUSH, self.get_high_card()
+        elif self.is_four_of_a_kind():
+            return Hand.FOUR_OF_A_KIND, self.get_high_card()
+        elif self.is_full_house():
+            return Hand.FULL_HOUSE, (self.get_high_card(), self[3])
+        elif self.is_flush():
+            return Hand.FLUSH, self.get_high_card()
+        elif self.is_straight():
+            return Hand.STRAIGHT, self.get_high_card()
+        elif self.is_three_of_a_kind():
+            return Hand.THREE_OF_A_KIND, self.get_high_card()
+        elif self.is_two_pair():
+            return Hand.TWO_PAIR, (self.get_high_card(), self[2])
+        elif self.is_one_pair():
+            return Hand.ONE_PAIR, self.get_high_card()
         
-        return Hand.HIGH_CARD, self.get_high_card
+        return Hand.HIGH_CARD, self.get_high_card()
 
 
-    @property
     def get_high_card(self) -> bool:
         return self[0]
     
-    @property
     def is_four_of_a_kind(self):
         return self[0] in (self[1], self[2], self[3])
 
-    @property
     def is_flush(self):
         def validator(counter: int) -> bool:
-            suits = [card.suits for card in self]
+            suits = [card.suit for card in self]
             for suit in suits:
                 if suits.count(suit) == counter:
                     return True
             return False
         return validator(5)
     
-    @property
     def is_one_pair(self) -> bool:
         return self[0] == self[1]
     
-    def sort_by_value_and_frequency(cards):
+    def sort_by_value_and_frequency(cards:Card):
         value_counts = {}
         for card in cards:
             if card.value in value_counts:
@@ -127,17 +123,13 @@ class Hand:
                 value_counts[card.value] = 1
 
         return sorted(cards, key=lambda card: (value_counts[card.value], card.value), reverse=True)
-
-
-    @property    
+    
     def is_two_pair(self) -> bool:
         return self[0] == self[1] and self[2] == self[3]
                 
-    @property
     def is_three_of_a_kind(self) -> bool:
         return self[0] in (self[1], self[2])
 
-    @property
     def is_straight(self) -> bool:
         values = [int(card.value) for card in self]
         buffer = values[0]
@@ -147,11 +139,9 @@ class Hand:
             buffer = value
         return True
 
-    @property
     def is_full_house(self) -> bool:
         return self[0] in (self[1], self[2]) and self[3] == self[4]
             
-    @property
     def is_straight_flush(self) -> bool:
         return self.is_straight() and self.is_flush()
 

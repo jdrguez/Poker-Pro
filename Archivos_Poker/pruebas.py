@@ -42,12 +42,11 @@ class Deck:
                 self.deck.append(Card(self.LETTERS[n] + suit))
 
         random.shuffle(self.deck)
-    
+        
     def pop(self):
         if self.deck:
             return self.deck.pop()
         return None
-        
 
 class Hand:
     HIGH_CARD = 0
@@ -201,6 +200,8 @@ class Dealer:
     
     def decide_winner(self, player, community_cards):
         pass
+    
+    
 
 
 class Player:
@@ -217,19 +218,22 @@ class Player:
         
     
     def best_hand(self):
-        better_cmoon_cards = self.common_cards
+        all_cards = self.private_cards + self.common_cards
         best_hand = None
-        if self.private_cards not in self.common_cards:
-            return Hand(self.private_cards + self.common_cards[:3])
-        for combo in combinations(better_cmoon_cards, n=5):
-            all_cards = list(combo[:3]) + self.private_cards
-            for c1 in combinations(all_cards, n=5):
-                hand = Hand(list(c1))
-                if not best_hand or hand > best_hand:
-                    best_hand = hand
+        for combo in combinations(all_cards, n=5):
+            hand = Hand(list(combo))
+            if not best_hand or hand > best_hand:
+                best_hand = hand
+        return best_hand
         
         return best_hand
-    
+
+
+
+
+
+def get_winner(player1_hand: Hand, player2_hand: Hand):
+    return max(player1_hand, player2_hand)  
     
 if __name__ == '__main__':
     
@@ -241,17 +245,18 @@ if __name__ == '__main__':
     player2 = Player('player2')
     print(player2)
 
-    
-    dealer = Dealer(deck, player1, player2)
-    
-    
-    dealer.deal_private_cards()
-    dealer.revealcards()
-    
-    print(player1.common_cards)
-    print(player1.private_cards)
+    common = [Card('A❤'), Card('K◆'), Card('Q♣'), Card('9❤'), Card('3♣')]
+
+    player1.recieve_cmoon_cards(common)
+    player2.recieve_cmoon_cards(common)
+
+    player1.recieve_priv_cards([Card('6◆'), Card('3◆')])
+    player2.recieve_priv_cards([Card('J◆'), Card('4◆')])
+
+    print(f'Player2 {player2.private_cards}')
     print(player1.best_hand())
     
+    print(get_winner(player1.best_hand(), player2.best_hand()))
     
     
     
