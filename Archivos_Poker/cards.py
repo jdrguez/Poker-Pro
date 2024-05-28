@@ -14,10 +14,13 @@ class Card:
         return self.value > other.value
     
     def __eq__(self, other: Card) -> bool:
-        return self.value == other.value
+        if isinstance(other, Card):
+            return self.num == other.num
+        elif isinstance(other, str):
+            return self.num == other[:-1] and self.suit == other[-1]
     
     def __str__(self) -> str:
-        return f'{self.num}{self.suit}'
+        return self.num
     
     
     def __repr__(self) -> str:
@@ -68,7 +71,7 @@ class Hand:
         return self.cat > other.cat
     
     def __eq__(self, other: Hand):
-        return self.cat > other.cat
+        return self.cat == other.cat
     
     def __getitem__(self, index: int):
         return self.cards[index]
@@ -84,7 +87,7 @@ class Hand:
         elif self.is_four_of_a_kind():
             return Hand.FOUR_OF_A_KIND, self.get_high_card()
         elif self.is_full_house():
-            return Hand.FULL_HOUSE, (self.get_high_card(), self[3])
+            return Hand.FULL_HOUSE, (self.get_high_card(), self[3].num)
         elif self.is_flush():
             return Hand.FLUSH, self.get_high_card()
         elif self.is_straight():
@@ -92,7 +95,7 @@ class Hand:
         elif self.is_three_of_a_kind():
             return Hand.THREE_OF_A_KIND, self.get_high_card()
         elif self.is_two_pair():
-            return Hand.TWO_PAIR, (self.get_high_card(), self[2])
+            return Hand.TWO_PAIR, (self.get_high_card(), self[2].num)
         elif self.is_one_pair():
             return Hand.ONE_PAIR, self.get_high_card()
         
@@ -100,10 +103,10 @@ class Hand:
 
 
     def get_high_card(self) -> bool:
-        return self[0]
+        return self[0].num
     
     def is_four_of_a_kind(self):
-        return self[0] in (self[1], self[2], self[3])
+        return all(x == self[0] for x in self[:4])
 
     def is_flush(self):
         def validator(counter: int) -> bool:
@@ -131,7 +134,7 @@ class Hand:
         return self[0] == self[1] and self[2] == self[3]
                 
     def is_three_of_a_kind(self) -> bool:
-        return self[0] in (self[1], self[2])
+        return all(x == self[0] for x in self[:3])
 
     def is_straight(self) -> bool:
         values = [int(card.value) for card in self]
@@ -143,7 +146,7 @@ class Hand:
         return True
 
     def is_full_house(self) -> bool:
-        return self[0] in (self[1], self[2]) and self[3] == self[4]
+        return all(x == self[0] for x in self[:3]) and self[3] == self[4]
             
     def is_straight_flush(self) -> bool:
         return self.is_straight() and self.is_flush()

@@ -73,6 +73,9 @@ class Hand:
     def __gt__(self, other: Hand):
         return self.cat > other.cat
     
+    def __eq__(self, other: Hand):
+        return self.cat == other.cat
+    
     def __getitem__(self, index: int):
         return self.cards[index]
     
@@ -106,7 +109,7 @@ class Hand:
         return self[0]
     
     def is_four_of_a_kind(self):
-        return self[0] in (self[1], self[2], self[3])
+        return self[0] == self[1] and self[0] == self[2] and self[0] == self[3] and self[0] == self[4]
 
     def is_flush(self):
         def validator(counter: int) -> bool:
@@ -135,7 +138,7 @@ class Hand:
         return self[0] == self[1] and self[2] == self[3]
                 
     def is_three_of_a_kind(self) -> bool:
-        return self[0] in (self[1], self[2])
+        return all(x == self[0] for x in self[:3])
 
     def is_straight(self) -> bool:
         values = [int(card.value) for card in self]
@@ -147,7 +150,7 @@ class Hand:
         return True
 
     def is_full_house(self) -> bool:
-        return self[0] in (self[1], self[2]) and self[3] == self[4]
+        return all(x == self[0] for x in self[:3]) and self[3] == self[4]
             
     def is_straight_flush(self) -> bool:
         return self.is_straight() and self.is_flush()
@@ -215,7 +218,9 @@ class Player:
     
     def recieve_cmoon_cards(self, cards: list[Card]):
         self.common_cards = cards
-        
+    
+    def __gt__(self, other:Player):
+        return self.best_hand() > other.best_hand()
     
     def best_hand(self):
         all_cards = self.private_cards + self.common_cards
@@ -225,22 +230,16 @@ class Player:
             if not best_hand or hand > best_hand:
                 best_hand = hand
             elif best_hand == hand:
-                for winner, cmmon in zip(best_hand, hand):
-                    if winner < cmmon:
+                for x, y in zip(best_hand, hand):
+                    if y > x:
                         best_hand = hand
-        
-
-        
-            
         return best_hand
 
+    def winner(self):
+        if player1 > player2:
+            return player1.name
+        return player2.name
 
-
-
-
-def get_winner(player1_hand: Hand, player2_hand: Hand):
-    return max(player1_hand, player2_hand)  
-    
 if __name__ == '__main__':
     
     deck = Deck()
@@ -251,18 +250,21 @@ if __name__ == '__main__':
     player2 = Player('player2')
     print(player2)
 
-    common = [Card('10◆'), Card('9◆'), Card('8♠'), Card('6❤'), Card('5♠')]
+    common = [Card('A❤'), Card('K◆'), Card('Q♣'), Card('9❤'), Card('3♣')]
 
     player1.recieve_cmoon_cards(common)
     player2.recieve_cmoon_cards(common)
 
-    player1.recieve_priv_cards([Card('Q♠'), Card('4◆')])
-    player2.recieve_priv_cards([Card('8♣'), Card('3❤')])
+    player1.recieve_priv_cards([Card('6◆'), Card('3◆')])
+    player2.recieve_priv_cards([Card('J◆'), Card('4◆')])
 
     print(f'Player2 {player2.private_cards}')
     print(player1.best_hand())
+    print(player2.best_hand())
     
-    print(f'Ganador: {get_winner(player1.best_hand(), player2.best_hand())}')
+    print(player1.best_hand().cat)
+    
+    print(f'Ganador: {player1.winner()}')
     
     
     

@@ -5,10 +5,9 @@ from cards import Card, Hand, Deck
 
 
 class Dealer:
-    def init(self, deck: list[str], player1: Player, player2: Player):
+    def __init__(self, deck: list[str], players: Player):
         self.deck = deck
-        self.player1 = player1
-        self.player2 = player2
+        self.player1, self.player2 = players
 
     def deal_cards(self, num_cards: int) -> list:
         return [self.deck.pop(0) for _ in range(num_cards)]
@@ -32,17 +31,21 @@ class Dealer:
         else:
             return (self.player2.name, hand2)
     
-    def get_best_hand(self, players, community_cards):
-        all_cards = Player.private_cards + community_cards
-        best_hand = None
-        for combo in combinations(all_cards, n=5):
-            hand = Hand(list(combo))
-            if not best_hand or hand > best_hand:
-                best_hand = hand
-        return best_hand
-    
-    def decide_winner(self, player, community_cards):
-        pass
+    def decide_winner(self, players: Player, community_cards:list[Card], private_cards:list[Card]):
+        player_1, player_2 = players
+        player_1.recieve_priv_cards(private_cards[0])
+        player_1.recieve_cmoon_cards(community_cards)
+        player_2.recieve_priv_cards(private_cards[1])
+        player_2.recieve_cmoon_cards(community_cards)
+        
+        best_hands = player_1.best_hand(), player_2.best_hand()
+        best_hand_1, best_hand_2 = best_hands
+        
+        if best_hand_1 > best_hand_2:
+            return player_1, best_hand_1
+        else:
+            return player_2, best_hand_2
+        
 
 
 class Player:
@@ -57,8 +60,11 @@ class Player:
     def recieve_cmoon_cards(self, cards: list[Card]):
         self.common_cards = cards
         
+    def __gt__(self, other: Player):
+        return self.best_hand() > other.best_hand()
+        
     def __str__(self):
-        return name
+        return self.name
     
     def best_hand(self):
         all_cards = self.private_cards + self.common_cards
@@ -68,13 +74,9 @@ class Player:
             if not best_hand or hand > best_hand:
                 best_hand = hand
             elif best_hand == hand:
-                for winner, cmmon in zip(best_hand, hand):
-                    if winner < cmmon:
+                for x, y in zip(best_hand, hand):
+                    if y > x:
                         best_hand = hand
-        
-
-        
-            
         return best_hand
 
 
