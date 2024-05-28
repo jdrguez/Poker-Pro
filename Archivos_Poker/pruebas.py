@@ -8,7 +8,7 @@ from helpers import combinations
 
 
 class Card:
-    VALUES = {'J': 10, 'Q': 11, 'K': 12, 'A': 13}
+    VALUES = {'J': 11, 'Q': 12, 'K': 13, 'A': 14}
     def __init__(self, card):
         self.suit = card[-1]
         self.num = card[0:-1]
@@ -250,13 +250,13 @@ if __name__ == '__main__':
     player2 = Player('player2')
     print(player2)
 
-    common = [Card('A❤'), Card('K◆'), Card('Q♣'), Card('9❤'), Card('3♣')]
+    common =  [Card('K◆'), Card('9❤'), Card('8◆'), Card('7❤'), Card('5♠')]
 
     player1.recieve_cmoon_cards(common)
     player2.recieve_cmoon_cards(common)
 
-    player1.recieve_priv_cards([Card('6◆'), Card('3◆')])
-    player2.recieve_priv_cards([Card('J◆'), Card('4◆')])
+    player1.recieve_priv_cards([Card('J♠'), Card('10♣')])
+    player2.recieve_priv_cards([Card('K♠'), Card('Q❤')])
 
     print(f'Player2 {player2.private_cards}')
     print(player1.best_hand())

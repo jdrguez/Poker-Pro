@@ -3,7 +3,7 @@ from helpers import shuffle, combinations, random
 
 
 class Card:
-    VALUES = {'J': 10, 'Q': 11, 'K': 12, 'A': 13}
+    VALUES = {'J': 11, 'Q': 12, 'K': 13, 'A': 14}
     def __init__(self, card:str):
         self.suit = card[-1]
         self.num = card[0:-1]
@@ -84,19 +84,19 @@ class Hand:
         
         if self.is_straight_flush():
             return Hand.STRAIGHT_FLUSH, self.get_high_card()
-        elif self.is_four_of_a_kind():
+        if self.is_four_of_a_kind():
             return Hand.FOUR_OF_A_KIND, self.get_high_card()
-        elif self.is_full_house():
+        if self.is_full_house():
             return Hand.FULL_HOUSE, (self.get_high_card(), self[3].num)
-        elif self.is_flush():
+        if self.is_flush():
             return Hand.FLUSH, self.get_high_card()
-        elif self.is_straight():
+        if self.is_straight():
             return Hand.STRAIGHT, self.get_high_card()
-        elif self.is_three_of_a_kind():
+        if self.is_three_of_a_kind():
             return Hand.THREE_OF_A_KIND, self.get_high_card()
-        elif self.is_two_pair():
+        if self.is_two_pair():
             return Hand.TWO_PAIR, (self.get_high_card(), self[2].num)
-        elif self.is_one_pair():
+        if self.is_one_pair():
             return Hand.ONE_PAIR, self.get_high_card()
         
         return Hand.HIGH_CARD, self.get_high_card()
