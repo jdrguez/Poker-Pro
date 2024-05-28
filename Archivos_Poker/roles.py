@@ -100,6 +100,9 @@ class Player:
                 for x, y in zip(best_hand, hand):
                     if y > x:
                         best_hand = hand
+                        break
+                    elif x > y:
+                        break
 
         return best_hand
     
