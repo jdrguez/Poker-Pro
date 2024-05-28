@@ -69,7 +69,6 @@ class Hand:
     
     def __gt__(self, other: Hand):
         return self.cat > other.cat
-    
     def __eq__(self, other: Hand):
         return self.cat == other.cat
     
@@ -139,18 +138,17 @@ class Hand:
     def is_straight(self) -> bool:
         values = [int(card.value) for card in self]
         buffer = values[0]
-        for value in values[1:]:
-            if buffer - 1 != value:
-                return False
-            buffer = value
-        return True
+        if values[0] == 14 and values[-4] == 5:
+            return False
+        else:
+            for value in values[1:]:
+                if buffer - 1 != value:
+                    return False
+                buffer = value
+            return True
 
     def is_full_house(self) -> bool:
-        return all(x == self[0] for x in self[:3]) and self[3] == self[4]
+        return all(x == self[0] for x in self[:2]) and self[3] == self[4]
             
     def is_straight_flush(self) -> bool:
         return self.is_straight() and self.is_flush()
-
-
-
-    

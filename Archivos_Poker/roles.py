@@ -41,11 +41,34 @@ class Dealer:
         best_hands = player_1.best_hand(), player_2.best_hand()
         best_hand_1, best_hand_2 = best_hands
         
+        print(best_hand_1)
+        print(best_hand_2)
+        
+        
         if best_hand_1 > best_hand_2:
             return player_1, best_hand_1
-        else:
+        elif best_hand_2 > best_hand_1:
             return player_2, best_hand_2
-        
+        else:
+            if not any(card in player_1.private_cards + player_2.private_cards for card in best_hand_1):
+                return None, best_hand_1
+            else:
+                max_card_1 = max(player_1.private_cards)
+                max_card_2 = max(player_2.private_cards)
+                if max_card_1 > max_card_2:
+                    return player_1, best_hand_1
+                elif max_card_1 < max_card_2:
+                    return player_2, best_hand_2
+                else:
+                    for i in range(4, -1, -1): 
+                        if best_hand_1.cards[i] > best_hand_2.cards[i]:
+                            return player_1, best_hand_1
+                        elif best_hand_1.cards[i] < best_hand_2.cards[i]:
+                            return player_2, best_hand_2
+
+                        print(best_hand_1)
+                        return None, best_hand_1
+
 
 
 class Player:
@@ -77,6 +100,9 @@ class Player:
                 for x, y in zip(best_hand, hand):
                     if y > x:
                         best_hand = hand
+
         return best_hand
+    
+    
 
 

@@ -250,13 +250,13 @@ if __name__ == '__main__':
     player2 = Player('player2')
     print(player2)
 
-    common =  [Card('K◆'), Card('9❤'), Card('8◆'), Card('7❤'), Card('5♠')]
+    common = [Card('A◆'), Card('7❤'), Card('7♣'), Card('2❤'), Card('2♠')]
 
     player1.recieve_cmoon_cards(common)
     player2.recieve_cmoon_cards(common)
 
-    player1.recieve_priv_cards([Card('J♠'), Card('10♣')])
-    player2.recieve_priv_cards([Card('K♠'), Card('Q❤')])
+    player1.recieve_priv_cards([Card('Q♣'), Card('9◆')])
+    player2.recieve_priv_cards([Card('10❤'), Card('5❤')])
 
     print(f'Player2 {player2.private_cards}')
     print(player1.best_hand())
