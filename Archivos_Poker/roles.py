@@ -44,6 +44,12 @@ class Dealer:
         print(best_hand_1)
         print(best_hand_2)
         
+        print(best_hand_1.cat)
+        
+        print(best_hand_1.cat_rank)
+        print(best_hand_2.cat_rank)
+        
+        
         
         if best_hand_1 > best_hand_2:
             return player_1, best_hand_1
@@ -58,25 +64,51 @@ class Dealer:
                 elif best_value2 > best_value1:
                     return player_2, best_hand_2
                 else:
-                    if not any(card in player_1.private_cards + player_2.private_cards for card in best_hand_1):
+                    if best_hand_1.cat == Hand.TWO_PAIR and best_hand_2 == Hand.TWO_PAIR:
+                        best_value1 = best_hand_1.cat_rank[1] 
+                        best_value2 = best_hand_2.cat_rank[1] 
+                        
+                        best_value1 = Card.VALUES[best_value1] if best_value1 in Card.VALUES else int(best_value1)
+                        best_value2 = Card.VALUES[best_value2] if best_value2 in Card.VALUES else int(best_value2)
+                        
+                        print(best_value1)
+                        print(best_value2)
+                        if best_value1 > best_value2:
+                            return player_1, best_hand_1
+                        elif best_value2 > best_value1:
+                            return player_2, best_hand_2
+                        else:
+                            max_card_1 = max(player_1.private_cards)
+                            max_card_2 = max(player_2.private_cards)
+                            if max_card_1 > max_card_2:
+                                return player_1, best_hand_1
+                            elif max_card_1 < max_card_2:
+                                return player_2, best_hand_2
+                            else:
+                                for card1, card2 in zip(best_hand_1, best_hand_2):
+                                    if card1 > card2:
+                                        return player_1, best_hand_1
+                                    elif card2 > card1:
+                                        return player_2, best_hand_2
                                 return None, best_hand_1
                     else:
                         max_card_1 = max(player_1.private_cards)
                         max_card_2 = max(player_2.private_cards)
+                        
                         if max_card_1 > max_card_2:
                             return player_1, best_hand_1
                         elif max_card_1 < max_card_2:
                             return player_2, best_hand_2
+                        
                         else:
-                            for i in range(4, -1, -1): 
-                                if best_hand_1.cards[i] > best_hand_2.cards[i]:
+                            for card1, card2 in zip(best_hand_1, best_hand_2):
+                                if card1 > card2:
                                     return player_1, best_hand_1
-                                elif best_hand_1.cards[i] < best_hand_2.cards[i]:
+                                elif card2 > card1:
                                     return player_2, best_hand_2
+                            return None, best_hand_1
+                                    
 
-                                print(best_hand_1)
-                                return None, best_hand_1
-            
 
 class Player:
     def __init__(self, name: str):
@@ -89,9 +121,6 @@ class Player:
     
     def recieve_cmoon_cards(self, cards: list[Card]):
         self.common_cards = cards
-        
-    def __gt__(self, other: Player):
-        return self.best_hand() > other.best_hand()
         
     def __str__(self):
         return self.name
@@ -110,24 +139,7 @@ class Player:
                         break
                     elif x > y:
                        break
-                   
-        
-        best_with_private = None
-        for combo in combinations(all_cards, n=5):
-            hand = Hand(list(combo))
-            if any(card in hand.cards for card in self.private_cards):
-                if not best_with_private or hand > best_with_private:
-                    best_with_private = hand
-                elif best_hand == hand:
-                    for x, y in zip(best_with_private, hand):
-                        if y > x:
-                            best_with_private = hand
-                            break
-                        elif x > y:
-                            break
-        
-        return best_with_private if best_with_private else best_hand
-    
+        return best_hand
     
 
 

@@ -71,28 +71,17 @@ class Hand:
         return self.cat > other.cat
         
     def __eq__(self, other: Hand):
-        return self.cat == other.cat and self.cat_rank == other.cat_rank
-    
-    def __lt__(self, other: Hand):
-        return not self > other and not self == other
-    
-    
+        if isinstance(other, Hand):
+            return self.cat == other.cat and self.cat_rank == other.cat_rank
+        elif isinstance(other, int):
+            return self.cat == other
+
     def __getitem__(self, index: int):
         return self.cards[index]
     
     def __iter__(self):
         for card in self.cards:
             yield card
-
-
-    def compare_high_cards(self, other: Hand):
-        for card1, card2 in zip(self, other):
-            if card1 > card2:
-                return 1
-            elif card1 < card2:
-                return -1
-        return 0
-
 
     def classify(self):
         
