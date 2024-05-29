@@ -69,8 +69,13 @@ class Hand:
     
     def __gt__(self, other: Hand):
         return self.cat > other.cat
+        
     def __eq__(self, other: Hand):
-        return self.cat == other.cat
+        return self.cat == other.cat and self.cat_rank == other.cat_rank
+    
+    def __lt__(self, other: Hand):
+        return not self > other and not self == other
+    
     
     def __getitem__(self, index: int):
         return self.cards[index]
@@ -78,6 +83,16 @@ class Hand:
     def __iter__(self):
         for card in self.cards:
             yield card
+
+
+    def compare_high_cards(self, other: Hand):
+        for card1, card2 in zip(self, other):
+            if card1 > card2:
+                return 1
+            elif card1 < card2:
+                return -1
+        return 0
+
 
     def classify(self):
         
@@ -101,8 +116,11 @@ class Hand:
         return Hand.HIGH_CARD, self.get_high_card()
 
 
-    def get_high_card(self) -> bool:
+    def get_high_card(self) -> str:
         return self[0].num
+
+    def get_value(self) -> str:
+        return self[0].value
     
     def is_four_of_a_kind(self):
         return all(x == self[0] for x in self[:4])

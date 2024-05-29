@@ -50,26 +50,33 @@ class Dealer:
         elif best_hand_2 > best_hand_1:
             return player_2, best_hand_2
         else:
-            if not any(card in player_1.private_cards + player_2.private_cards for card in best_hand_1):
-                return None, best_hand_1
-            else:
-                max_card_1 = max(player_1.private_cards)
-                max_card_2 = max(player_2.private_cards)
-                if max_card_1 > max_card_2:
+            if best_hand_1.cat == best_hand_2.cat:
+                best_value1 = best_hand_1.get_value()
+                best_value2 = best_hand_2.get_value()
+                if best_value1 > best_value2:
                     return player_1, best_hand_1
-                elif max_card_1 < max_card_2:
+                elif best_value2 > best_value1:
                     return player_2, best_hand_2
                 else:
-                    for i in range(4, -1, -1): 
-                        if best_hand_1.cards[i] > best_hand_2.cards[i]:
+                    if not any(card in player_1.private_cards + player_2.private_cards for card in best_hand_1):
+                                return None, best_hand_1
+                    else:
+                        max_card_1 = max(player_1.private_cards)
+                        max_card_2 = max(player_2.private_cards)
+                        if max_card_1 > max_card_2:
                             return player_1, best_hand_1
-                        elif best_hand_1.cards[i] < best_hand_2.cards[i]:
+                        elif max_card_1 < max_card_2:
                             return player_2, best_hand_2
+                        else:
+                            for i in range(4, -1, -1): 
+                                if best_hand_1.cards[i] > best_hand_2.cards[i]:
+                                    return player_1, best_hand_1
+                                elif best_hand_1.cards[i] < best_hand_2.cards[i]:
+                                    return player_2, best_hand_2
 
-                        print(best_hand_1)
-                        return None, best_hand_1
-
-
+                                print(best_hand_1)
+                                return None, best_hand_1
+            
 
 class Player:
     def __init__(self, name: str):
@@ -102,9 +109,24 @@ class Player:
                         best_hand = hand
                         break
                     elif x > y:
-                        break
-
-        return best_hand
+                       break
+                   
+        
+        best_with_private = None
+        for combo in combinations(all_cards, n=5):
+            hand = Hand(list(combo))
+            if any(card in hand.cards for card in self.private_cards):
+                if not best_with_private or hand > best_with_private:
+                    best_with_private = hand
+                elif best_hand == hand:
+                    for x, y in zip(best_with_private, hand):
+                        if y > x:
+                            best_with_private = hand
+                            break
+                        elif x > y:
+                            break
+        
+        return best_with_private if best_with_private else best_hand
     
     
 
