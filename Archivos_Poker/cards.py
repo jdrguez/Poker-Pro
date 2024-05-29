@@ -72,12 +72,15 @@ class Hand:
         
     def __eq__(self, other: Hand):
         if isinstance(other, Hand):
-            return self.cat == other.cat and self.cat_rank == other.cat_rank
+            return self.cat == other.cat 
         elif isinstance(other, int):
             return self.cat == other
 
     def __getitem__(self, index: int):
         return self.cards[index]
+    
+    def __add__(self, other: Hand):
+        return self.cards.extend(other.cards)
     
     def __iter__(self):
         for card in self.cards:

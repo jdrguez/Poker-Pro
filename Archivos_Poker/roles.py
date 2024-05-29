@@ -56,13 +56,18 @@ class Dealer:
         elif best_hand_2 > best_hand_1:
             return player_2, best_hand_2
         else:
-            if best_hand_1.cat == best_hand_2.cat:
+            if all(card1 == card2 for card1, card2 in zip(best_hand_1, best_hand_2)):
+                return None, best_hand_1
+            elif best_hand_1.cat == best_hand_2.cat:                    
                 best_value1 = best_hand_1.get_value()
                 best_value2 = best_hand_2.get_value()
-                if best_value1 > best_value2:
+                if best_hand_1.cat == Hand.STRAIGHT and best_value1 == best_value2:
+                    return None, best_hand_1
+                elif best_value1 > best_value2:
                     return player_1, best_hand_1
                 elif best_value2 > best_value1:
                     return player_2, best_hand_2
+                
                 else:
                     if best_hand_1.cat == Hand.TWO_PAIR and best_hand_2 == Hand.TWO_PAIR:
                         best_value1 = best_hand_1.cat_rank[1] 
