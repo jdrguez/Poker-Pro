@@ -135,8 +135,8 @@ class Player:
         """
         all_cards = self.private_cards + self.common_cards
         best_hand = None
-        for combo in combinations(all_cards, n=5):
-            hand = Hand(list(combo))
+        for card in combinations(all_cards, n=5):
+            hand = Hand(list(card))
             if not best_hand or hand > best_hand:
                 best_hand = hand
             elif best_hand == hand:

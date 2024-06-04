@@ -28,7 +28,6 @@ class Card:
         self.num = card[0:-1]
         self.value = self.VALUES[self.num] if self.num in self.VALUES else int(self.num)
 
-    pass
 
     def __gt__(self, other: Card) -> bool:
         """
@@ -144,7 +143,7 @@ class Hand:
         :return: Una cadena que representa la instancia de la mano en el formato "Hand(cards)".
         :rtype: str
         """
-        return f'Hand({self.cards})'
+        return f'Hand({self})'
 
     def __contains__(self, card):
         """
